@@ -1,55 +1,39 @@
 /.vs
 /x64
+/Project1/x64
 
-# Prerequisites
-*.d
+# Build artifacts
+*.o        # Object files
+*.a        # Static libraries
+*.so       # Shared libraries (Linux)
+*.dll      # Dynamic-link libraries (Windows)
+*.exe      # Executables (Windows)
+*.out      # Generic executables
+build/     # Common build output directory
+bin/       # Common binary output directory
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+# IDE-specific files
+.vscode/   # VS Code settings
+.idea/     # CLion/IntelliJ IDEA settings
+*.xcodeproj/ # Xcode project files (macOS)
+*.xcworkspace/ # Xcode workspace files (macOS)
+*.suo      # Visual Studio Solution User Options
+*.user     # Visual Studio User files
+*.vcxproj.user # Visual Studio Project User files
+*.vcxproj.filters
+*.vcxproj.user
+*.sln.ide* # Visual Studio IDE-specific solution files
 
-# Linker output
-*.ilk
-*.map
-*.exp
+# Editor-specific files
+*~         # Backup files created by some editors (e.g., Vim)
+*.swp      # Swap files created by Vim
+.#*        # Emacs lock files
 
-# Precompiled Headers
-*.gch
-*.pch
+# Operating System files
+.DS_Store  # macOS specific file
+Thumbs.db  # Windows specific file
+ehthumbs.db # Windows specific file
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+# Dependency management (if applicable)
+# For example, if using a package manager that creates a vendor directory:
+vendor/

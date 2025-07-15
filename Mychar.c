@@ -115,3 +115,8 @@ void SetMyShipBulletType(short bulletType)
 	myship.bullet_type = bulletType;
 }
 
+short GetMyShipBulletType()
+{
+	return myship.bullet_type;
+}
+

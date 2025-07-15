@@ -13,6 +13,7 @@
 
 #define MY_BULLET_TYPE_DEFAULT	 10
 #define MY_BULLET_TYPE_THREE	 11
+#define MY_BULLET_TYPE_BOMB		 12
 
 #include <windows.h>
 #include <stdio.h>
@@ -38,7 +39,8 @@ typedef struct{
 
 extern BULLET     myship_bullet[MAX_MY_BULLET];
 extern BULLET     enemy_bullet[MAX_ENEMY_BULLET];
-extern ENEMYSHIP  enemyship[MAX_ENEMY];
+extern ENEMYSHIP enemyship[MAX_ENEMY_BASE_ROW][MAX_ENEMY_BASE_COL];
+
 extern int        score,killnum;
 
 void DrawMyship(UPOINT *pt,UPOINT*);
@@ -51,13 +53,23 @@ void SetMyShipBulletType(short bulletType);
 void Drawenemyship( );
 void Initenemyship();
 void CalenemyshipPos();
+
+/// <summary>
+/// 적 기체가 바닥까지 내려왔는지 확인
+/// </summary>
+/// <returns>1: 바닥 도착, 0: 아직 미도착</returns>
 int  Checkenemypos();
 int  Calflag();
 void CalTime();
 void Bulletshot();
 void DrawBullet();
 void InitBullet();
-void CheckenemyBullet(ENEMYSHIP*);
+
+/// <summary>
+/// 적 기체 사망 확인
+/// </summary>
+/// <param name="enemyship">대상 적 기체</param>
+void CheckEnemyBullet(ENEMYSHIP*);
 
 void boom(UPOINT pt,int );
 void play();

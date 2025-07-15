@@ -53,17 +53,26 @@ void main(void)
 		gotoxy(ptend);
 		printf("다시 할까요? (y/n)\n");
 
-		if (_getch() == 'y')
+		do
 		{
-			ClearScreen();
-			bp = 0;
-			killnum = 0;
-			timeflag = 0;
-			ptend.y = 12;
-			loop = 1;
-		}
-		else
-			loop = 0;
+			char input = _getch();
+			if (input == 'y')
+			{
+				ClearScreen();
+				bp = 0;
+				killnum = 0;
+				timeflag = 0;
+				ptend.y = 12;
+				loop = 1;
+				break;
+			}
+			else if (input == 'n')
+			{
+				loop = 0;
+				break;
+			}
+		} while (1);
+
 	}
 }
 
@@ -128,7 +137,7 @@ void  play()
 					hiscore = score;
 				break;
 			}
-			CheckenemyBullet(enemyship);
+			CheckEnemyBullet(enemyship);
 			DrawMyBullet();
 			DrawMyship(&ptthisMypos, &ptMyoldpos);
 			gotoxy(ptscore);
@@ -145,7 +154,7 @@ void  play()
 			if (killnum > 10)
 			{
 				juckspeed = 150;
-				SetMyShipBulletType(MY_BULLET_TYPE_THREE);
+				SetMyShipBulletType(MY_BULLET_TYPE_BOMB);
 			}
 
 			gotoxy(pthi);

@@ -2,16 +2,15 @@
 
 char  enemyship_shape[5] = "^V^";
 
-ENEMYSHIP enemyship[MAX_ENEMY];
-UPOINT ptOld[MAX_ENEMY];
+ENEMYSHIP enemyship[MAX_ENEMY_BASE_ROW][MAX_ENEMY_BASE_COL];
+UPOINT ptOld[MAX_ENEMY_BASE_ROW][MAX_ENEMY_BASE_COL];
 BULLET enemy_bullet[MAX_ENEMY_BULLET];
 short flag; // 기체 이동 방향 결정 TRUE: right, FALSE: left
 
 
 void Initenemyship()
 {
-	int i, j, k;
-	k = 0;
+	int i, j;
 
 	flag = FALSE;
 
@@ -19,12 +18,11 @@ void Initenemyship()
 	{
 		for (j = 0; j < MAX_ENEMY_BASE_COL; j++)
 		{
-			enemyship[k].flag = TRUE;
-			enemyship[k].pos.x = ENEMY_SHIP_BASE_POSX + j * 4;
-			enemyship[k].pos.y = ENEMY_SHIP_BASE_POSY + i * 2;
-			ptOld[k].x = ENEMY_SHIP_BASE_POSX + j * 4;
-			ptOld[k].y = ENEMY_SHIP_BASE_POSY + i * 2;
-			k++;
+			enemyship[i][j].flag = TRUE;
+			enemyship[i][j].pos.x = ENEMY_SHIP_BASE_POSX + j * 4;
+			enemyship[i][j].pos.y = ENEMY_SHIP_BASE_POSY + i * 2;
+			ptOld[i][j].x = ENEMY_SHIP_BASE_POSX + j * 4;
+			ptOld[i][j].y = ENEMY_SHIP_BASE_POSY + i * 2;
 		}
 	}
 	InitBullet();
@@ -32,9 +30,7 @@ void Initenemyship()
 
 void CalenemyshipPos()
 {
-	int i, j, k, XAdd, YAdd;
-
-	k = 0;
+	int i, j, XAdd, YAdd;
 
 	YAdd = Calflag();
 	if (flag == FALSE)
@@ -46,12 +42,10 @@ void CalenemyshipPos()
 	{
 		for (j = 0; j < MAX_ENEMY_BASE_COL; j++)
 		{
-			ptOld[k].x = enemyship[k].pos.x;
-			ptOld[k].y = enemyship[k].pos.y;
-			enemyship[k].pos.x += XAdd;
-			enemyship[k].pos.y += YAdd;
-			k++;
-
+			ptOld[i][j].x = enemyship[i][j].pos.x;
+			ptOld[i][j].y = enemyship[i][j].pos.y;
+			enemyship[i][j].pos.x += XAdd;
+			enemyship[i][j].pos.y += YAdd;
 		}
 	}
 }
@@ -60,7 +54,7 @@ int Calflag()
 {
 	int add;
 
-	if (enemyship[0].pos.x < 1 || enemyship[0].pos.x > 40)
+	if (enemyship[0][0].pos.x < 1 || enemyship[0][MAX_ENEMY_BASE_COL].pos.x > 40)
 	{
 		if (flag == TRUE)
 			flag = FALSE;
@@ -76,38 +70,28 @@ int Calflag()
 void Drawenemyship()
 {
 	UPOINT pos, posOld;
-	int i;
+	int i, j;
 
-	for (i = 0; i < MAX_ENEMY; i++)
+	for (i = 0; i < MAX_ENEMY_BASE_ROW; i++)
 	{
-		if (enemyship[i].flag == TRUE)
+		for (j = 0; j < MAX_ENEMY_BASE_COL; j++)
 		{
-			posOld.x = ptOld[i].x;
-			posOld.y = ptOld[i].y;
+			if (enemyship[i][j].flag == TRUE)
+			{
+				posOld.x = ptOld[i][j].x;
+				posOld.y = ptOld[i][j].y;
 
-			pos.x = enemyship[i].pos.x;
-			pos.y = enemyship[i].pos.y;
+				pos.x = enemyship[i][j].pos.x;
+				pos.y = enemyship[i][j].pos.y;
 
-			gotoxy(posOld);
-			printf("   ");
+				gotoxy(posOld);
+				printf("   ");
 
-			gotoxy(pos);
-			printf("%s", enemyship_shape);
+				gotoxy(pos);
+				printf("%s", enemyship_shape);
+			}
 		}
 	}
-}
-
-int BulletNum()
-{
-	int num;
-	while (1)
-	{
-		num = rand() % 40;
-		if (enemyship[num].flag == FALSE)
-			continue;
-		break;
-	}
-	return num;
 }
 
 void InitBullet()
@@ -124,16 +108,24 @@ void InitBullet()
 
 void Bulletshot()
 {
-	int i, num;
-	num = BulletNum();
+	int i, randRow, randCol;
+
+	while (1)
+	{
+		randRow = rand() % MAX_ENEMY_BASE_ROW;
+		randCol = rand() % MAX_ENEMY_BASE_COL;
+		if (enemyship[randRow][randCol].flag == FALSE)
+			continue;
+		break;
+	}
 
 	for (i = 0; i < MAX_ENEMY_BULLET; i++)
 	{
 		if (enemy_bullet[i].flag == FALSE)
 		{
 			enemy_bullet[i].flag = TRUE;
-			enemy_bullet[i].pos.x = enemyship[num].pos.x;
-			enemy_bullet[i].pos.y = enemyship[num].pos.y;
+			enemy_bullet[i].pos.x = enemyship[randRow][randCol].pos.x;
+			enemy_bullet[i].pos.y = enemyship[randRow][randCol].pos.y;
 			break;
 		}
 	}
@@ -172,21 +164,24 @@ void DrawBullet()
 
 int Checkenemypos()
 {
-	int flag = FALSE, i;
+	int flag = FALSE, i, j;
 
-	for (i = 0; i < MAX_ENEMY; i++)
+	for (i = 0; i < MAX_ENEMY_BASE_ROW; i++)
 	{
-		if (enemyship[i].flag == TRUE && enemyship[i].pos.y == 23)
+		for (j = 0; j < MAX_ENEMY_BASE_COL; j++)
 		{
-			flag = TRUE;
-			break;
+			if (enemyship[i][j].flag == TRUE && enemyship[i][j].pos.y == 23)
+			{
+				flag = TRUE;
+				return flag;
+			}
 		}
 	}
 
 	return flag;
 }
 
-void CheckenemyBullet(ENEMYSHIP* enemyship)
+void CheckEnemyBullet(ENEMYSHIP* enemyship)
 {
 	int i, j;
 	static BULLET boompos[MAX_MY_BULLET];
@@ -218,6 +213,12 @@ void CheckenemyBullet(ENEMYSHIP* enemyship)
 						gotoxy(enemyship[j].pos);
 						printf(" *** ");
 						myship_bullet[i].flag = FALSE;
+
+						if (GetMyShipBulletType() == MY_BULLET_TYPE_BOMB)
+						{
+
+						}
+
 						score += 100;
 						killnum++;
 						boompos[i].pos = enemyship[j].pos;

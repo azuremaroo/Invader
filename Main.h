@@ -1,15 +1,18 @@
 #define MAX_ENEMY           40  
-#define MAXENEMY_BASE_ROW    4   
-#define MAXENEMY_BASE_COL   10  
-#define MAXENEMY_BULLET     10  
-#define ENEMYSHIP_BASE_POSX 20   
-#define ENEMYSHIP_BASE_POSY  2  
+#define MAX_ENEMY_BASE_ROW    4   
+#define MAX_ENEMY_BASE_COL   10  
+#define MAX_ENEMY_BULLET     10  
+#define ENEMY_SHIP_BASE_POSX 20   
+#define ENEMY_SHIP_BASE_POSY  2  
 #define TRUE                 1
 #define FALSE                0
 
-#define MAXMY_BULLET         3   
-#define MYSHIP_BASE_POSX    38  
-#define MYSHIP_BASE_POSY    23  
+#define MAX_MY_BULLET         30  
+#define MY_SHIP_BASE_POSX    38  
+#define MY_SHIP_BASE_POSY    23  
+
+#define MY_BULLET_TYPE_DEFAULT	 10
+#define MY_BULLET_TYPE_THREE	 11
 
 #include <windows.h>
 #include <stdio.h>
@@ -19,7 +22,8 @@
 
 typedef struct{  
 	int flag;
-	UPOINT pos;  
+	UPOINT pos;
+	short bullet_type;
 } MYSHIP;
 
 typedef struct{ 
@@ -32,8 +36,8 @@ typedef struct{
 	UPOINT pos;
 } ENEMYSHIP;
 
-extern BULLET     myship_bullet[MAXMY_BULLET];
-extern BULLET     enemy_bullet[MAXENEMY_BULLET];
+extern BULLET     myship_bullet[MAX_MY_BULLET];
+extern BULLET     enemy_bullet[MAX_ENEMY_BULLET];
 extern ENEMYSHIP  enemyship[MAX_ENEMY];
 extern int        score,killnum;
 
@@ -42,6 +46,7 @@ void InitMyship();
 void MyBulletshot(UPOINT );
 void DrawMyBullet();
 int  CheckMybullet(UPOINT ptthisMypos);
+void SetMyShipBulletType(short bulletType);
 
 void Drawenemyship( );
 void Initenemyship();

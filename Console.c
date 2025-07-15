@@ -6,12 +6,12 @@ HANDLE hout;
 
 void ClearScreen()
 {
-	int i,j;
+	int i, j;
 	UPOINT pos;
 
-	for( i =1 ; i < 25 ; i++)
+	for (i = 1; i < 25; i++)
 	{
-		for( j = 1; j < 80 ; j++)
+		for (j = 1; j < 80; j++)
 		{
 			pos.x = j;
 			pos.y = i;
@@ -40,5 +40,5 @@ void gotoxy(UPOINT pt)
 	pos.X = pt.x;
 	pos.Y = pt.y;
 
-	SetConsoleCursorPosition(hout , pos);
+	SetConsoleCursorPosition(hout, pos);
 }

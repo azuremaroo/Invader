@@ -21,6 +21,9 @@ void ClearScreen()
 	}
 }
 
+/// <summary>
+/// 콘솔 커서를 초기화합니다.
+/// </summary>
 void InitConsole()
 {
 	CONSOLE_CURSOR_INFO coninfo;
@@ -33,6 +36,10 @@ void InitConsole()
 	SetConsoleCursorInfo(hout, &coninfo);
 }
 
+/// <summary>
+/// 콘솔 커서를 지정한 좌표로 이동시킵니다.
+/// </summary>
+/// <param name="pt">이동할 좌표를 나타내는 UPOINT 구조체입니다.</param>
 void gotoxy(UPOINT pt)
 {
 	COORD pos;

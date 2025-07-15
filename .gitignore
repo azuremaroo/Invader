@@ -1,6 +1,6 @@
 /.vs
 /x64
-/Project1/x64
+/Invader/x64
 
 # Build artifacts
 *.o        # Object files

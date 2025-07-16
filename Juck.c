@@ -192,7 +192,7 @@ void CheckEnemyBullet()
 		if (boompos[i].flag == TRUE)
 		{
 			gotoxy(boompos[i].pos);
-			printf("   ");
+			printf("     ");
 			boompos[i].flag = FALSE;
 		}
 	}
@@ -216,7 +216,7 @@ void CheckEnemyBullet()
 							printf(" *** ");
 							myship_bullet[i].flag = FALSE;
 
-							if (GetMyShipBulletType() == MY_BULLET_TYPE_BOMB)
+							if (GetMyShipBulletType() % MY_BULLET_TYPE_BOMB == 0)
 							{
 								for (int l = -1; l < 2; l++)
 								{
@@ -224,13 +224,15 @@ void CheckEnemyBullet()
 									{
 										if (l == 0 && m == 0)
 											continue;
+
 										int row = 0, col = 0;
 										row = j + l;
-										if (row < 0 || row > MAX_ENEMY_BASE_ROW)
+
+										if (row < 0 || row >= MAX_ENEMY_BASE_ROW)
 											continue;
 
 										col = k + m;
-										if (row < 0 || row > MAX_ENEMY_BASE_COL)
+										if (row < 0 || row >= MAX_ENEMY_BASE_COL)
 											continue;
 
 										if (enemyship[row][col].flag == TRUE)
@@ -243,7 +245,6 @@ void CheckEnemyBullet()
 										}
 									}
 								}
-
 							}
 
 							score += 100;

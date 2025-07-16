@@ -68,7 +68,7 @@ void MyBulletshot(UPOINT ptthisMypos)
 			myship_bullet[i].pos.y = ptthisMypos.y - 1;
 
 			// 기본 미사일 좌우로 미사일 1개씩 추가
-			if (myship.bullet_type == MY_BULLET_TYPE_THREE)
+			if (myship.bullet_type % MY_BULLET_TYPE_THREE == 0)
 			{
 				myship_bullet[i + 1].flag = TRUE;
 				myship_bullet[i + 1].pos.x = myship_bullet[i].pos.x + 2;
@@ -110,12 +110,15 @@ int CheckMybullet(UPOINT ptthisMypos)
 		return 1;
 }
 
-void SetMyShipBulletType(short bulletType)
+void SetMyShipBulletType(int bulletType)
 {
-	myship.bullet_type = bulletType;
+	if (myship.bullet_type % bulletType != 0)
+	{
+		myship.bullet_type *= bulletType;
+	}
 }
 
-short GetMyShipBulletType()
+int GetMyShipBulletType()
 {
 	return myship.bullet_type;
 }

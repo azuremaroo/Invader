@@ -11,9 +11,9 @@
 #define MY_SHIP_BASE_POSX    38  
 #define MY_SHIP_BASE_POSY    23  
 
-#define MY_BULLET_TYPE_DEFAULT	 10
-#define MY_BULLET_TYPE_THREE	 11
-#define MY_BULLET_TYPE_BOMB		 12
+#define MY_BULLET_TYPE_DEFAULT	 1
+#define MY_BULLET_TYPE_THREE	 3
+#define MY_BULLET_TYPE_BOMB		 5
 
 #include <windows.h>
 #include <stdio.h>
@@ -24,7 +24,7 @@
 typedef struct{  
 	int flag;
 	UPOINT pos;
-	short bullet_type;
+	int bullet_type;
 } MYSHIP;
 
 typedef struct{ 
@@ -48,7 +48,7 @@ void InitMyship();
 void MyBulletshot(UPOINT );
 void DrawMyBullet();
 int  CheckMybullet(UPOINT ptthisMypos);
-void SetMyShipBulletType(short bulletType);
+void SetMyShipBulletType(int bulletType);
 
 void Drawenemyship( );
 void Initenemyship();

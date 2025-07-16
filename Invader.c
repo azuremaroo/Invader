@@ -153,8 +153,15 @@ void  play()
 			// 난이도 수정
 			if (killnum > 10)
 			{
-				juckspeed = 150;
-				SetMyShipBulletType(MY_BULLET_TYPE_BOMB);
+				if (juckspeed > 150)
+				{
+					SetMyShipBulletType(MY_BULLET_TYPE_BOMB);
+					juckspeed = 150;
+				}
+			}
+			else if (killnum > 5)
+			{
+				SetMyShipBulletType(MY_BULLET_TYPE_THREE);
 			}
 
 			gotoxy(pthi);

@@ -137,7 +137,7 @@ void  play()
 					hiscore = score;
 				break;
 			}
-			CheckEnemyBullet(enemyship);
+			CheckEnemyBullet();
 			DrawMyBullet();
 			DrawMyship(&ptthisMypos, &ptMyoldpos);
 			gotoxy(ptscore);

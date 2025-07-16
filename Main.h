@@ -68,8 +68,7 @@ void InitBullet();
 /// <summary>
 /// 적 기체 사망 확인
 /// </summary>
-/// <param name="enemyship">대상 적 기체</param>
-void CheckEnemyBullet(ENEMYSHIP*);
+void CheckEnemyBullet();
 
 void boom(UPOINT pt,int );
 void play();

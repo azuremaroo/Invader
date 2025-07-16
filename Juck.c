@@ -181,9 +181,9 @@ int Checkenemypos()
 	return flag;
 }
 
-void CheckEnemyBullet(ENEMYSHIP* enemyship)
+void CheckEnemyBullet()
 {
-	int i, j;
+	int i, j, k;
 	static BULLET boompos[MAX_MY_BULLET];
 	static int flag;
 
@@ -201,28 +201,56 @@ void CheckEnemyBullet(ENEMYSHIP* enemyship)
 	{
 		if (myship_bullet[i].flag == TRUE)
 		{
-			for (j = 0; j < MAX_ENEMY; j++)
+			for (j = 0; j < MAX_ENEMY_BASE_ROW; j++)
 			{
-				if (enemyship[j].flag == TRUE)
+				for (k = 0; k < MAX_ENEMY_BASE_COL; k++)
 				{
-					if (enemyship[j].pos.x <= myship_bullet[i].pos.x &&
-						myship_bullet[i].pos.x <= (enemyship[j].pos.x + 2) &&
-						(enemyship[j].pos.y == myship_bullet[i].pos.y))
+					if (enemyship[j][k].flag == TRUE)
 					{
-						enemyship[j].flag = FALSE;
-						gotoxy(enemyship[j].pos);
-						printf(" *** ");
-						myship_bullet[i].flag = FALSE;
-
-						if (GetMyShipBulletType() == MY_BULLET_TYPE_BOMB)
+						if (enemyship[j][k].pos.x <= myship_bullet[i].pos.x &&
+							myship_bullet[i].pos.x <= (enemyship[j][k].pos.x + 2) &&
+							(enemyship[j][k].pos.y == myship_bullet[i].pos.y))
 						{
+							enemyship[j][k].flag = FALSE;
+							gotoxy(enemyship[j][k].pos);
+							printf(" *** ");
+							myship_bullet[i].flag = FALSE;
 
+							if (GetMyShipBulletType() == MY_BULLET_TYPE_BOMB)
+							{
+								for (int l = -1; l < 2; l++)
+								{
+									for (int m = -1; m < 2; m++)
+									{
+										if (l == 0 && m == 0)
+											continue;
+										int row = 0, col = 0;
+										row = j + l;
+										if (row < 0 || row > MAX_ENEMY_BASE_ROW)
+											continue;
+
+										col = k + m;
+										if (row < 0 || row > MAX_ENEMY_BASE_COL)
+											continue;
+
+										if (enemyship[row][col].flag == TRUE)
+										{
+											enemyship[row][col].flag = FALSE;
+											gotoxy(enemyship[row][col].pos);
+											printf(" *** ");
+											score += 100;
+											killnum++;
+										}
+									}
+								}
+
+							}
+
+							score += 100;
+							killnum++;
+							boompos[i].pos = enemyship[j][k].pos;
+							boompos[i].flag = TRUE;
 						}
-
-						score += 100;
-						killnum++;
-						boompos[i].pos = enemyship[j].pos;
-						boompos[i].flag = TRUE;
 					}
 				}
 			}

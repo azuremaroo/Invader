@@ -5,14 +5,14 @@ char  enemyship_shape[5] = "^V^";
 ENEMYSHIP enemyship[MAX_ENEMY_BASE_ROW][MAX_ENEMY_BASE_COL];
 UPOINT ptOld[MAX_ENEMY_BASE_ROW][MAX_ENEMY_BASE_COL];
 BULLET enemy_bullet[MAX_ENEMY_BULLET];
-short flag; // 기체 이동 방향 결정 TRUE: right, FALSE: left
+short isRight; // 적 기체 이동 방향 결정 TRUE: right, FALSE: left
 
 
 void Initenemyship()
 {
 	int i, j;
 
-	flag = FALSE;
+	isRight = FALSE;
 
 	for (i = 0; i < MAX_ENEMY_BASE_ROW; i++)
 	{
@@ -33,7 +33,7 @@ void CalenemyshipPos()
 	int i, j, XAdd, YAdd;
 
 	YAdd = Calflag();
-	if (flag == FALSE)
+	if (isRight == FALSE)
 		XAdd = 1;
 	else
 		XAdd = -1;
@@ -54,12 +54,12 @@ int Calflag()
 {
 	int add;
 
-	if (enemyship[0][0].pos.x < 1 || enemyship[0][MAX_ENEMY_BASE_COL].pos.x > 40)
+	if (enemyship[0][0].pos.x < 1 || enemyship[0][MAX_ENEMY_BASE_COL - 1].pos.x > 73)
 	{
-		if (flag == TRUE)
-			flag = FALSE;
+		if (isRight == TRUE)
+			isRight = FALSE;
 		else
-			flag = TRUE;
+			isRight = TRUE;
 		add = 1;
 	}
 	else
@@ -194,6 +194,23 @@ void CheckEnemyBullet()
 			gotoxy(boompos[i].pos);
 			printf("     ");
 			boompos[i].flag = FALSE;
+
+			if (HasMyShipBulletType(MY_BULLET_TYPE_BOMB))
+			{
+				for (int l = -1; l < 2; l++)
+				{
+					for (int m = -1; m < 2; m++)
+					{
+						if (l == 0 && m == 0)
+							continue;
+
+                        UPOINT tempPos = { boompos[i].pos.x + (l * 4), boompos[i].pos.y + (m * 2) };
+						gotoxy(tempPos);
+						printf("     ");
+					}
+				}
+			}
+
 		}
 	}
 
@@ -211,12 +228,11 @@ void CheckEnemyBullet()
 							myship_bullet[i].pos.x <= (enemyship[j][k].pos.x + 2) &&
 							(enemyship[j][k].pos.y == myship_bullet[i].pos.y))
 						{
-							enemyship[j][k].flag = FALSE;
-							gotoxy(enemyship[j][k].pos);
-							printf(" *** ");
 							myship_bullet[i].flag = FALSE;
 
-							if (GetMyShipBulletType() % MY_BULLET_TYPE_BOMB == 0)
+							DestroyEnemyShip(&enemyship[j][k]);
+
+							if (HasMyShipBulletType(MY_BULLET_TYPE_BOMB))
 							{
 								for (int l = -1; l < 2; l++)
 								{
@@ -237,18 +253,12 @@ void CheckEnemyBullet()
 
 										if (enemyship[row][col].flag == TRUE)
 										{
-											enemyship[row][col].flag = FALSE;
-											gotoxy(enemyship[row][col].pos);
-											printf(" *** ");
-											score += 100;
-											killnum++;
+											DestroyEnemyShip(&enemyship[row][col]);
 										}
 									}
 								}
 							}
 
-							score += 100;
-							killnum++;
 							boompos[i].pos = enemyship[j][k].pos;
 							boompos[i].flag = TRUE;
 						}
@@ -258,5 +268,14 @@ void CheckEnemyBullet()
 		}
 	}
 }
+
+void DestroyEnemyShip(ENEMYSHIP* target)
+{
+	target->flag = FALSE;
+	gotoxy(target->pos);
+	printf(" *** ");
+	score += 100;
+	killnum++;
+};
 
 

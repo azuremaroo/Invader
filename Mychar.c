@@ -123,3 +123,9 @@ int GetMyShipBulletType()
 	return myship.bullet_type;
 }
 
+int HasMyShipBulletType(int myShipBulletType) {
+	if (myship.bullet_type % myShipBulletType == 0)
+		return TRUE;
+	else
+		return FALSE;
+}

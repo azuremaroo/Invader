@@ -69,7 +69,8 @@ void InitBullet();
 /// 적 기체 사망 확인
 /// </summary>
 void CheckEnemyBullet();
+void DestroyEnemyShip(ENEMYSHIP* target);
 
-void boom(UPOINT pt,int );
+void boom(UPOINT pt, int);
 void play();
 

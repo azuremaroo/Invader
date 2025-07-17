@@ -112,15 +112,15 @@ void  Play()
 			switch (_getch())
 			{
 			case 'a':
-				if (gthisTickCount - bulletcount > 500)
+				if (gthisTickCount - bulletcount > 500) // 연사 속도
 				{
-					MyBulletshot(ptthisMypos);
+					ShotMyBullet(ptthisMypos);
 					bulletcount = gthisTickCount;
 				}
 				break;
 			case 'j':
 				ptMyoldpos.x = ptthisMypos.x;
-				if (--ptthisMypos.x < 1)ptthisMypos.x = 1;
+				if (--ptthisMypos.x < 1) ptthisMypos.x = 1;
 				DrawMyship(&ptthisMypos, &ptMyoldpos);
 				break;
 			case 'l':
@@ -158,13 +158,13 @@ void  Play()
 			{
 				if (juckspeed > 150)
 				{
-					SetMyShipBulletType(MY_BULLET_TYPE_BOMB);
+					SetMyBulletType(MY_BULLET_TYPE_BOMB);
 					juckspeed = 150;
 				}
 			}
 			else if (killnum > 5)
 			{
-				SetMyShipBulletType(MY_BULLET_TYPE_THREE);
+				SetMyBulletType(MY_BULLET_TYPE_THREE);
 			}
 
 			gotoxy(pthi);

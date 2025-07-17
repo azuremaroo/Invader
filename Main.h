@@ -45,10 +45,13 @@ extern int        score, killnum;
 
 void DrawMyship(UPOINT* pt, UPOINT*);
 void InitMyship();
-void MyBulletshot(UPOINT);
+void ShotMyBullet(UPOINT);
+void ActiveMyBullet(BULLET* bullet, int x, int y);
 void DrawMyBullet();
 int  CheckMybullet(UPOINT ptthisMypos);
-void SetMyShipBulletType(int bulletType);
+void SetMyBulletType(int bulletType);
+int GetMyBulletType();
+int CheckMyBulletType(int bulletType);
 void InitMyBullet();
 
 void Drawenemyship();

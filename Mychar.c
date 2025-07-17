@@ -41,11 +41,11 @@ void DrawMyBullet()
 	int i;
 	UPOINT ptpos, oldpos;
 
-	for (i = 0; i < MAX_ENEMY_BULLET; i++)
+	for (i = 0; i < MAX_MY_BULLET; i++)
 	{
 		if (my_bullet[i].flag == TRUE)
 		{
-			if (my_bullet[i].pos.y < 1)
+			if (my_bullet[i].pos.y <= 2)
 			{
 				my_bullet[i].flag = FALSE;
 				oldpos.x = my_bullet[i].pos.x;
@@ -63,12 +63,19 @@ void DrawMyBullet()
 			gotoxy(oldpos);
 			printf(" ");
 			gotoxy(ptpos);
-			printf("!");
+			if (CheckMyBulletType(MY_BULLET_TYPE_BOMB))
+			{
+				printf("@");
+			}
+			else
+			{
+				printf("!");
+			}
 		}
 	}
 }
 
-void MyBulletshot(UPOINT ptthisMypos)
+void ShotMyBullet(UPOINT ptthisMypos)
 {
 	int i;
 
@@ -76,25 +83,26 @@ void MyBulletshot(UPOINT ptthisMypos)
 	{
 		if (my_bullet[i].flag == FALSE)
 		{
-			my_bullet[i].flag = TRUE;
-			my_bullet[i].pos.x = ptthisMypos.x + 2;
-			my_bullet[i].pos.y = ptthisMypos.y - 1;
+			int posX = ptthisMypos.x + 2, posY = ptthisMypos.y - 1;
+			ActiveMyBullet(&my_bullet[i], ptthisMypos.x + 2, ptthisMypos.y - 1);
 
 			// 기본 미사일 좌우로 미사일 1개씩 추가
-			if (myship.bullet_type % MY_BULLET_TYPE_THREE == 0)
+			if (CheckMyBulletType(MY_BULLET_TYPE_THREE))
 			{
-				my_bullet[i + 1].flag = TRUE;
-				my_bullet[i + 1].pos.x = my_bullet[i].pos.x + 2;
-				my_bullet[i + 1].pos.y = my_bullet[i].pos.y;
-
-				my_bullet[i + 2].flag = TRUE;
-				my_bullet[i + 2].pos.x = my_bullet[i].pos.x - 2;
-				my_bullet[i + 2].pos.y = my_bullet[i].pos.y;
+				ActiveMyBullet(&my_bullet[i + 1], posX + 2, posY);
+				ActiveMyBullet(&my_bullet[i + 2], posX - 2, posY);
 			}
 
 			break;
 		}
 	}
+}
+
+void ActiveMyBullet(BULLET* bullet, int x, int y)
+{
+	bullet->flag = TRUE;
+	bullet->pos.x = x;
+	bullet->pos.y = y;
 }
 
 int CheckMybullet(UPOINT ptthisMypos)
@@ -108,8 +116,7 @@ int CheckMybullet(UPOINT ptthisMypos)
 		if (enemy_bullet[i].flag == TRUE)
 		{
 			if (ptthisMypos.x <= enemy_bullet[i].pos.x &&
-				(enemy_bullet[i].pos.x <= ptthisMypos.x + 4) &&
-				enemy_bullet[i].pos.y == ptthisMypos.y)
+				(enemy_bullet[i].pos.x <= ptthisMypos.x + 4) && enemy_bullet[i].pos.y == ptthisMypos.y)
 			{
 				flag = TRUE;
 				break;
@@ -123,7 +130,7 @@ int CheckMybullet(UPOINT ptthisMypos)
 		return 1;
 }
 
-void SetMyShipBulletType(int bulletType)
+void SetMyBulletType(int bulletType)
 {
 	if (myship.bullet_type % bulletType != 0)
 	{
@@ -131,12 +138,12 @@ void SetMyShipBulletType(int bulletType)
 	}
 }
 
-int GetMyShipBulletType()
+int GetMyBulletType()
 {
 	return myship.bullet_type;
 }
 
-int HasMyShipBulletType(int myShipBulletType) {
+int CheckMyBulletType(int myShipBulletType) {
 	if (myship.bullet_type % myShipBulletType == 0)
 		return TRUE;
 	else

@@ -195,7 +195,7 @@ void CheckEnemyBullet()
 			printf("     ");
 			boompos[i].flag = FALSE;
 
-			if (HasMyShipBulletType(MY_BULLET_TYPE_BOMB))
+			if (CheckMyBulletType(MY_BULLET_TYPE_BOMB))
 			{
 				for (int l = -1; l < 2; l++)
 				{
@@ -232,7 +232,7 @@ void CheckEnemyBullet()
 
 							DestroyEnemyShip(&enemyship[j][k]);
 
-							if (HasMyShipBulletType(MY_BULLET_TYPE_BOMB))
+							if (CheckMyBulletType(MY_BULLET_TYPE_BOMB))
 							{
 								for (int l = -1; l < 2; l++)
 								{

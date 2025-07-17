@@ -1,7 +1,7 @@
 #include "main.h"
 
 MYSHIP  myship;
-BULLET myship_bullet[MAX_MY_BULLET];
+BULLET my_bullet[MAX_MY_BULLET];
 
 char  myship_shape[10] = "-i^i-";
 
@@ -11,6 +11,19 @@ void InitMyship()
 	myship.pos.x = MY_SHIP_BASE_POSX;
 	myship.pos.y = MY_SHIP_BASE_POSY;
 	myship.bullet_type = MY_BULLET_TYPE_DEFAULT;
+	InitMyBullet();
+}
+
+void InitMyBullet()
+{
+	int i;
+
+	for (i = 0; i < MAX_MY_BULLET; i++)
+	{
+		my_bullet[i].flag = FALSE;
+		my_bullet[i].pos.x = 0;
+		my_bullet[i].pos.y = 0;
+	}
 }
 
 
@@ -30,23 +43,23 @@ void DrawMyBullet()
 
 	for (i = 0; i < MAX_ENEMY_BULLET; i++)
 	{
-		if (myship_bullet[i].flag == TRUE)
+		if (my_bullet[i].flag == TRUE)
 		{
-			if (myship_bullet[i].pos.y < 1)
+			if (my_bullet[i].pos.y < 1)
 			{
-				myship_bullet[i].flag = FALSE;
-				oldpos.x = myship_bullet[i].pos.x;
-				oldpos.y = myship_bullet[i].pos.y;
+				my_bullet[i].flag = FALSE;
+				oldpos.x = my_bullet[i].pos.x;
+				oldpos.y = my_bullet[i].pos.y;
 				gotoxy(oldpos);
 				printf(" ");
 				break;
 			}
 
-			oldpos.x = myship_bullet[i].pos.x;
-			oldpos.y = myship_bullet[i].pos.y;
-			--myship_bullet[i].pos.y;
-			ptpos.x = myship_bullet[i].pos.x;
-			ptpos.y = myship_bullet[i].pos.y;
+			oldpos.x = my_bullet[i].pos.x;
+			oldpos.y = my_bullet[i].pos.y;
+			--my_bullet[i].pos.y;
+			ptpos.x = my_bullet[i].pos.x;
+			ptpos.y = my_bullet[i].pos.y;
 			gotoxy(oldpos);
 			printf(" ");
 			gotoxy(ptpos);
@@ -61,22 +74,22 @@ void MyBulletshot(UPOINT ptthisMypos)
 
 	for (i = 0; i < MAX_MY_BULLET; i++)
 	{
-		if (myship_bullet[i].flag == FALSE)
+		if (my_bullet[i].flag == FALSE)
 		{
-			myship_bullet[i].flag = TRUE;
-			myship_bullet[i].pos.x = ptthisMypos.x + 2;
-			myship_bullet[i].pos.y = ptthisMypos.y - 1;
+			my_bullet[i].flag = TRUE;
+			my_bullet[i].pos.x = ptthisMypos.x + 2;
+			my_bullet[i].pos.y = ptthisMypos.y - 1;
 
 			// 기본 미사일 좌우로 미사일 1개씩 추가
 			if (myship.bullet_type % MY_BULLET_TYPE_THREE == 0)
 			{
-				myship_bullet[i + 1].flag = TRUE;
-				myship_bullet[i + 1].pos.x = myship_bullet[i].pos.x + 2;
-				myship_bullet[i + 1].pos.y = myship_bullet[i].pos.y;
+				my_bullet[i + 1].flag = TRUE;
+				my_bullet[i + 1].pos.x = my_bullet[i].pos.x + 2;
+				my_bullet[i + 1].pos.y = my_bullet[i].pos.y;
 
-				myship_bullet[i + 2].flag = TRUE;
-				myship_bullet[i + 2].pos.x = myship_bullet[i].pos.x - 2;
-				myship_bullet[i + 2].pos.y = myship_bullet[i].pos.y;
+				my_bullet[i + 2].flag = TRUE;
+				my_bullet[i + 2].pos.x = my_bullet[i].pos.x - 2;
+				my_bullet[i + 2].pos.y = my_bullet[i].pos.y;
 			}
 
 			break;

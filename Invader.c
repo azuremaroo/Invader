@@ -25,7 +25,7 @@ void main(void)
 		DWORD         bcount = thisTickCount;
 		int           bp = 0;
 
-		play();
+		Play();
 
 		for (;;)
 		{
@@ -61,6 +61,9 @@ void main(void)
 				ClearScreen();
 				bp = 0;
 				killnum = 0;
+				score = 0;
+				InitMyship();
+				InitEnemyship();
 				timeflag = 0;
 				ptend.y = 12;
 				loop = 1;
@@ -76,7 +79,7 @@ void main(void)
 	}
 }
 
-void  play()
+void  Play()
 {
 	static UPOINT ptMyoldpos;
 	DWORD         gthisTickCount = GetTickCount();
@@ -88,7 +91,7 @@ void  play()
 
 	InitConsole();
 	InitMyship();
-	Initenemyship();
+	InitEnemyship();
 
 	ptthisMypos.x = ptMyoldpos.x = MY_SHIP_BASE_POSX;
 	ptthisMypos.y = ptMyoldpos.y = MY_SHIP_BASE_POSY;

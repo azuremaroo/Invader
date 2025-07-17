@@ -21,37 +21,38 @@
 #include <wincon.h>
 #include "console.h"
 
-typedef struct{  
+typedef struct {
 	int flag;
 	UPOINT pos;
 	int bullet_type;
 } MYSHIP;
 
-typedef struct{ 
+typedef struct {
 	int flag;
 	UPOINT pos;
 } BULLET;
 
-typedef struct{ 
+typedef struct {
 	int flag;
 	UPOINT pos;
 } ENEMYSHIP;
 
-extern BULLET     myship_bullet[MAX_MY_BULLET];
+extern BULLET     my_bullet[MAX_MY_BULLET];
 extern BULLET     enemy_bullet[MAX_ENEMY_BULLET];
 extern ENEMYSHIP enemyship[MAX_ENEMY_BASE_ROW][MAX_ENEMY_BASE_COL];
 
-extern int        score,killnum;
+extern int        score, killnum;
 
-void DrawMyship(UPOINT *pt,UPOINT*);
+void DrawMyship(UPOINT* pt, UPOINT*);
 void InitMyship();
-void MyBulletshot(UPOINT );
+void MyBulletshot(UPOINT);
 void DrawMyBullet();
 int  CheckMybullet(UPOINT ptthisMypos);
 void SetMyShipBulletType(int bulletType);
+void InitMyBullet();
 
-void Drawenemyship( );
-void Initenemyship();
+void Drawenemyship();
+void InitEnemyship();
 void CalenemyshipPos();
 
 /// <summary>
@@ -63,7 +64,7 @@ int  Calflag();
 void CalTime();
 void Bulletshot();
 void DrawBullet();
-void InitBullet();
+void InitEnemyBullet();
 
 /// <summary>
 /// 적 기체 사망 확인
@@ -72,5 +73,5 @@ void CheckEnemyBullet();
 void DestroyEnemyShip(ENEMYSHIP* target);
 
 void boom(UPOINT pt, int);
-void play();
+void Play();
 

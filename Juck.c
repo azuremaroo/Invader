@@ -8,7 +8,7 @@ BULLET enemy_bullet[MAX_ENEMY_BULLET];
 short isRight; // 적 기체 이동 방향 결정 TRUE: right, FALSE: left
 
 
-void Initenemyship()
+void InitEnemyship()
 {
 	int i, j;
 
@@ -25,7 +25,7 @@ void Initenemyship()
 			ptOld[i][j].y = ENEMY_SHIP_BASE_POSY + i * 2;
 		}
 	}
-	InitBullet();
+	InitEnemyBullet();
 }
 
 void CalenemyshipPos()
@@ -94,7 +94,7 @@ void Drawenemyship()
 	}
 }
 
-void InitBullet()
+void InitEnemyBullet()
 {
 	int i;
 
@@ -216,7 +216,7 @@ void CheckEnemyBullet()
 
 	for (i = 0; i < MAX_MY_BULLET; i++)
 	{
-		if (myship_bullet[i].flag == TRUE)
+		if (my_bullet[i].flag == TRUE)
 		{
 			for (j = 0; j < MAX_ENEMY_BASE_ROW; j++)
 			{
@@ -224,11 +224,11 @@ void CheckEnemyBullet()
 				{
 					if (enemyship[j][k].flag == TRUE)
 					{
-						if (enemyship[j][k].pos.x <= myship_bullet[i].pos.x &&
-							myship_bullet[i].pos.x <= (enemyship[j][k].pos.x + 2) &&
-							(enemyship[j][k].pos.y == myship_bullet[i].pos.y))
+						if (enemyship[j][k].pos.x <= my_bullet[i].pos.x &&
+							my_bullet[i].pos.x <= (enemyship[j][k].pos.x + 2) &&
+							(enemyship[j][k].pos.y == my_bullet[i].pos.y))
 						{
-							myship_bullet[i].flag = FALSE;
+							my_bullet[i].flag = FALSE;
 
 							DestroyEnemyShip(&enemyship[j][k]);
 

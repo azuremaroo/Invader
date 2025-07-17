@@ -1,4 +1,5 @@
 #include "main.h"
+
 UPOINT ptthisMypos;
 int    timeflag = FALSE;
 int    score, hiscore = 2000, killnum;
@@ -19,6 +20,9 @@ void main(void)
 	Aboom[7] = "       ";
 	ptend.x = 36;
 	ptend.y = 12;
+
+	system("mode con cols=80 lines=25"); // 콘솔창 화면 크기 조정: mode con(콘솔창 속성을 대사으로 설정)
+
 	while (loop)
 	{
 		DWORD         thisTickCount = GetTickCount();

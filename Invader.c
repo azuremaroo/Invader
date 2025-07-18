@@ -4,11 +4,13 @@ UPOINT ptthisMypos;
 int    timeflag = FALSE;
 int    score, hiscore = 2000, killnum;
 char* Aboom[8];
+char* message;
 
 void main(void)
 {
 	UPOINT        ptend;
 	int	loop = 1;
+	timeflag = FALSE;
 
 	Aboom[0] = "i<^>i";
 	Aboom[1] = "i(*)i";
@@ -21,7 +23,7 @@ void main(void)
 	ptend.x = 36;
 	ptend.y = 12;
 
-	system("mode con cols=80 lines=25"); // 콘솔창 화면 크기 조정: mode con(콘솔창 속성을 대사으로 설정)
+	system("mode con cols=80 lines=25"); // 콘솔창 화면 크기 조정(win11은 관리자 권한으로 실행해야 적용됨)
 
 	while (loop)
 	{
@@ -36,6 +38,7 @@ void main(void)
 			if (timeflag == FALSE)
 			{
 				thisTickCount = GetTickCount();
+				message = "당신의 비행기는 파괴되었습니다.";
 
 				if (thisTickCount - bcount > 100)
 				{
@@ -52,7 +55,7 @@ void main(void)
 		}
 
 		gotoxy(ptend);
-		printf("당신의 비행기는 파괴되었습니다.");
+		printf(message);
 		ptend.y += 1;
 		gotoxy(ptend);
 		printf("다시 할까요? (y/n)\n");
@@ -68,7 +71,7 @@ void main(void)
 				score = 0;
 				InitMyship();
 				InitEnemyship();
-				timeflag = 0;
+				timeflag = FALSE;
 				ptend.y = 12;
 				loop = 1;
 				break;
@@ -144,26 +147,33 @@ void  Play()
 					hiscore = score;
 				break;
 			}
-			CheckEnemyBullet();
+			timeflag = CheckKilledEnemy();
 			DrawMyBullet();
 			DrawMyship(&ptthisMypos, &ptMyoldpos);
 			gotoxy(ptscore);
 
-			if (killnum < 40)
-				printf("점수 : %d", score);
-			else
+			printf("점수 : %d", score);
+
+			if (timeflag)
 			{
-				timeflag = TRUE;
+				message = " 모든 적을 파괴했습니다. ";
 				break;
 			}
 
 			// 난이도 수정
-			if (killnum > 10)
+			if (killnum > 20)
 			{
-				if (juckspeed > 150)
+				if (juckspeed > 100)
 				{
 					SetMyBulletType(MY_BULLET_TYPE_BOMB);
-					juckspeed = 150;
+					juckspeed = 100;
+				}
+			}
+			else if (killnum > 10)
+			{
+				if (juckspeed > 200)
+				{
+					juckspeed = 200;
 				}
 			}
 			else if (killnum > 5)
@@ -178,11 +188,11 @@ void  Play()
 
 		if (gthisTickCount - gCount > juckspeed)
 		{
-			Bulletshot();
+			ShotBullet();
 			DrawBullet();
 			CalenemyshipPos();
 			Drawenemyship();
-			if (Checkenemypos() == 1)
+			if (CheckEnemyPos() == TRUE)
 				break;
 			gCount = gthisTickCount;
 		}

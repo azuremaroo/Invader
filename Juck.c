@@ -1,60 +1,72 @@
 #include "main.h"
 
 char  enemyship_shape[5] = "^V^";
-
-ENEMYSHIP enemyship[MAX_ENEMY_BASE_ROW][MAX_ENEMY_BASE_COL];
-UPOINT ptOld[MAX_ENEMY_BASE_ROW][MAX_ENEMY_BASE_COL];
+short isRight, addEnemyFlag, enemyLife;
 BULLET enemy_bullet[MAX_ENEMY_BULLET];
-short isRight; // 적 기체 이동 방향 결정 TRUE: right, FALSE: left
-
+ENEMYSHIP enemyShip[MAX_ENEMY_BASE_ROW][MAX_ENEMY_BASE_COL];
+UPOINT ptOld[MAX_ENEMY_BASE_ROW][MAX_ENEMY_BASE_COL];
 
 void InitEnemyship()
 {
-	int i, j;
+	int i, j, posX, posY;
 
 	isRight = FALSE;
+	enemyLife = 0;
 
 	for (i = 0; i < MAX_ENEMY_BASE_ROW; i++)
 	{
 		for (j = 0; j < MAX_ENEMY_BASE_COL; j++)
 		{
-			enemyship[i][j].flag = TRUE;
-			enemyship[i][j].pos.x = ENEMY_SHIP_BASE_POSX + j * 4;
-			enemyship[i][j].pos.y = ENEMY_SHIP_BASE_POSY + i * 2;
-			ptOld[i][j].x = ENEMY_SHIP_BASE_POSX + j * 4;
-			ptOld[i][j].y = ENEMY_SHIP_BASE_POSY + i * 2;
+			posX = ENEMY_SHIP_BASE_POSX + j * 4;
+			posY = ENEMY_SHIP_BASE_POSY + i * 2;
+			AddEnemyShip(&enemyShip[i][j], &ptOld[i][j], posX, posY);
 		}
 	}
+
 	InitEnemyBullet();
 }
 
 void CalenemyshipPos()
 {
-	int i, j, XAdd, YAdd;
+	short findEmptyLine = FALSE;
+	int i, j, xAdd, yAdd, posX;
 
-	YAdd = Calflag();
+	yAdd = Calflag();
 	if (isRight == FALSE)
-		XAdd = 1;
+		xAdd = 1;
 	else
-		XAdd = -1;
+		xAdd = -1;
 
 	for (i = 0; i < MAX_ENEMY_BASE_ROW; i++)
 	{
 		for (j = 0; j < MAX_ENEMY_BASE_COL; j++)
 		{
-			ptOld[i][j].x = enemyship[i][j].pos.x;
-			ptOld[i][j].y = enemyship[i][j].pos.y;
-			enemyship[i][j].pos.x += XAdd;
-			enemyship[i][j].pos.y += YAdd;
+			ptOld[i][j].x = enemyShip[i][j].pos.x;
+			ptOld[i][j].y = enemyShip[i][j].pos.y;
+
+			enemyShip[i][j].pos.x += xAdd;
+			enemyShip[i][j].pos.y += yAdd;
 		}
 	}
 }
 
 int Calflag()
 {
-	int add;
+	int add, i, j, minX = INT_MAX, maxX = 0;
 
-	if (enemyship[0][0].pos.x < 1 || enemyship[0][MAX_ENEMY_BASE_COL - 1].pos.x > 73)
+	for (i = 0; i < MAX_ENEMY_BASE_ROW; i++)
+	{
+		for (j = 0; j < MAX_ENEMY_BASE_COL; j++)
+		{
+			if (enemyShip[i][j].flag == TRUE)
+			{
+				if (enemyShip[i][j].pos.x < minX) minX = enemyShip[i][j].pos.x;
+				if (maxX < enemyShip[i][j].pos.x) maxX = enemyShip[i][j].pos.x;
+			}
+		}
+	}
+
+	if (minX < 1 || maxX > 73)
 	{
 		if (isRight == TRUE)
 			isRight = FALSE;
@@ -76,13 +88,13 @@ void Drawenemyship()
 	{
 		for (j = 0; j < MAX_ENEMY_BASE_COL; j++)
 		{
-			if (enemyship[i][j].flag == TRUE)
+			if (enemyShip[i][j].flag == TRUE)
 			{
 				posOld.x = ptOld[i][j].x;
 				posOld.y = ptOld[i][j].y;
 
-				pos.x = enemyship[i][j].pos.x;
-				pos.y = enemyship[i][j].pos.y;
+				pos.x = enemyShip[i][j].pos.x;
+				pos.y = enemyShip[i][j].pos.y;
 
 				gotoxy(posOld);
 				printf("   ");
@@ -106,7 +118,7 @@ void InitEnemyBullet()
 	}
 }
 
-void Bulletshot()
+void ShotBullet()
 {
 	int i, randRow, randCol;
 
@@ -114,7 +126,7 @@ void Bulletshot()
 	{
 		randRow = rand() % MAX_ENEMY_BASE_ROW;
 		randCol = rand() % MAX_ENEMY_BASE_COL;
-		if (enemyship[randRow][randCol].flag == FALSE)
+		if (enemyShip[randRow][randCol].flag == FALSE)
 			continue;
 		break;
 	}
@@ -124,8 +136,8 @@ void Bulletshot()
 		if (enemy_bullet[i].flag == FALSE)
 		{
 			enemy_bullet[i].flag = TRUE;
-			enemy_bullet[i].pos.x = enemyship[randRow][randCol].pos.x;
-			enemy_bullet[i].pos.y = enemyship[randRow][randCol].pos.y;
+			enemy_bullet[i].pos.x = enemyShip[randRow][randCol].pos.x;
+			enemy_bullet[i].pos.y = enemyShip[randRow][randCol].pos.y;
 			break;
 		}
 	}
@@ -162,7 +174,7 @@ void DrawBullet()
 	}
 }
 
-int Checkenemypos()
+int CheckEnemyPos()
 {
 	int flag = FALSE, i, j;
 
@@ -170,7 +182,7 @@ int Checkenemypos()
 	{
 		for (j = 0; j < MAX_ENEMY_BASE_COL; j++)
 		{
-			if (enemyship[i][j].flag == TRUE && enemyship[i][j].pos.y == 23)
+			if (enemyShip[i][j].flag == TRUE && enemyShip[i][j].pos.y == MAX_ENEMY_SHIP_POSY)
 			{
 				flag = TRUE;
 				return flag;
@@ -181,7 +193,7 @@ int Checkenemypos()
 	return flag;
 }
 
-void CheckEnemyBullet()
+int CheckKilledEnemy()
 {
 	int i, j, k;
 	static BULLET boompos[MAX_MY_BULLET];
@@ -195,6 +207,7 @@ void CheckEnemyBullet()
 			printf("     ");
 			boompos[i].flag = FALSE;
 
+			// 폭탄에 맞은 경우 상하좌우 1칸도 잔상 지우기
 			if (CheckMyBulletType(MY_BULLET_TYPE_BOMB))
 			{
 				for (int l = -1; l < 2; l++)
@@ -204,13 +217,12 @@ void CheckEnemyBullet()
 						if (l == 0 && m == 0)
 							continue;
 
-                        UPOINT tempPos = { boompos[i].pos.x + (l * 4), boompos[i].pos.y + (m * 2) };
+						UPOINT tempPos = { boompos[i].pos.x + (l * 4), boompos[i].pos.y + (m * 2) };
 						gotoxy(tempPos);
 						printf("     ");
 					}
 				}
 			}
-
 		}
 	}
 
@@ -222,15 +234,14 @@ void CheckEnemyBullet()
 			{
 				for (k = 0; k < MAX_ENEMY_BASE_COL; k++)
 				{
-					if (enemyship[j][k].flag == TRUE)
+					if (enemyShip[j][k].flag == TRUE)
 					{
-						if (enemyship[j][k].pos.x <= my_bullet[i].pos.x &&
-							my_bullet[i].pos.x <= (enemyship[j][k].pos.x + 2) &&
-							(enemyship[j][k].pos.y == my_bullet[i].pos.y))
+						if (enemyShip[j][k].pos.x <= my_bullet[i].pos.x && my_bullet[i].pos.x <= (enemyShip[j][k].pos.x + 2)
+							&& (enemyShip[j][k].pos.y == my_bullet[i].pos.y))
 						{
 							my_bullet[i].flag = FALSE;
 
-							DestroyEnemyShip(&enemyship[j][k]);
+							KillEnemyShip(&enemyShip[j][k]);
 
 							if (CheckMyBulletType(MY_BULLET_TYPE_BOMB))
 							{
@@ -251,15 +262,15 @@ void CheckEnemyBullet()
 										if (row < 0 || row >= MAX_ENEMY_BASE_COL)
 											continue;
 
-										if (enemyship[row][col].flag == TRUE)
+										if (enemyShip[row][col].flag == TRUE)
 										{
-											DestroyEnemyShip(&enemyship[row][col]);
+											KillEnemyShip(&enemyShip[row][col]);
 										}
 									}
 								}
 							}
 
-							boompos[i].pos = enemyship[j][k].pos;
+							boompos[i].pos = enemyShip[j][k].pos;
 							boompos[i].flag = TRUE;
 						}
 					}
@@ -267,15 +278,34 @@ void CheckEnemyBullet()
 			}
 		}
 	}
+
+	// 모든 적 기체가 죽은 경우
+	if (enemyLife == 0)
+	{
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
-void DestroyEnemyShip(ENEMYSHIP* target)
+void AddEnemyShip(ENEMYSHIP* enemyShip, UPOINT* oldPoint, int x, int y)
 {
-	target->flag = FALSE;
-	gotoxy(target->pos);
+	enemyShip->flag = TRUE;
+	enemyShip->pos.x = x;
+	enemyShip->pos.y = y;
+	oldPoint->x = x;
+	oldPoint->y = y;
+	enemyLife++;
+}
+
+void KillEnemyShip(ENEMYSHIP* enemyShip)
+{
+	enemyShip->flag = FALSE;
+	gotoxy(enemyShip->pos);
 	printf(" *** ");
 	score += 100;
 	killnum++;
+	enemyLife--;
 };
 
 
